@@ -78,11 +78,6 @@ class MyGame(arcade.Window):
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.SPACE:
-            self.player_list.append(Player(
-                ":resources:images/space_shooter/playerShip1_orange.png",
-                SPRITE_SCALING,
-                SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
-                random()*4+1, randint(0, 359), 0))
             print(len(self.player_list))
 
     def on_key_release(self, key, modifiers):

@@ -1,5 +1,5 @@
 """
-Based on arcade.examples.sprite_move_angle
+Sprite1: A quick experiment based on arcade.examples.sprite_move_angle
 """
 
 import math
@@ -8,7 +8,7 @@ import arcade
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-SCREEN_TITLE = "Zoomers and Spinners"
+SCREEN_TITLE = "Sprite1: Zoomers and Spinners"
 
 MOVEMENT_SPEED = 5
 ANGLE_SPEED = 5

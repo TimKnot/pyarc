@@ -42,7 +42,7 @@ class Meteor(arcade.Sprite):
         self.angle = 0
         self.delta_angle = randint(-5, 5)
         self.delta_scale = 0
-        self.delta_x = -size_factor*7  # nearer/bigger = faster
+        self.delta_x = -size_factor*20  # nearer/bigger = faster
 
     def update(self):
         # Update position. Apply any rotation.
@@ -111,11 +111,11 @@ class EjectedPilot(arcade.Sprite):
         ":resources:/images/animated_characters/zombie/zombie_idle.png",
     ]
 
-    def __init__(self, x, y, scale):
-        super().__init__(filename=choice(self.image_list), scale=0.1)
+    def __init__(self, x, y, scale, delta_x=0):
+        super().__init__(filename=choice(self.image_list), scale=scale/5)
         self.center_x = x
         self.center_y = y
-        self.scale = scale / 5
+        self.delta_x = delta_x
         self.angle = randint(0, 359)
         self.max_scale = self.scale*10
         self.delta_scale = (self.max_scale - self.scale) / 100
@@ -125,6 +125,7 @@ class EjectedPilot(arcade.Sprite):
         # Rotate the ship
         self.angle += self.delta_angle
         self.scale += self.delta_scale
+        self.center_x += self.delta_x
 
         # Grow then shrink
         if self.scale > self.max_scale:
@@ -217,7 +218,7 @@ class MyGame(arcade.Window):
             (Ignore ships that are already tumbling) """
         if not ship.tumbling:
             ship.tumble()
-            new_pilot = EjectedPilot(ship.center_x, ship.center_y, ship.scale)
+            new_pilot = EjectedPilot(ship.center_x, ship.center_y, ship.scale, ship.delta_x/2)
             self.pilot_list.append(new_pilot)
 
 

@@ -18,6 +18,7 @@ SHIP_FREQUENCY_SECONDS = 0.15
 VSYNC = False
 
 
+###############################################################################
 class Ship(arcade.Sprite):
     """ Move a random ship across the screen left to right.
         Larger ones are faster, to give a sense of distance. """
@@ -60,6 +61,8 @@ class Ship(arcade.Sprite):
         self.delta_scale = -0.01
         self.tumbling = True
 
+
+###############################################################################
 class EjectedPilot(arcade.Sprite):
     """ A spinning creature that grows then shrinks. """
 
@@ -93,6 +96,7 @@ class EjectedPilot(arcade.Sprite):
             self.kill()
 
 
+###############################################################################
 class MyGame(arcade.Window):
     def __init__(self, width, height, title, vsync=False):
         super().__init__(width, height, title, vsync)

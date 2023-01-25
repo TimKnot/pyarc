@@ -1,5 +1,10 @@
 """
 Sprite2: An experiment with sprite scaling, sorting and mouse actions.
+Usage:
+    Left mouse button - Click on ship to eject the pilot.
+    Space - Eject a random pilot.
+    Backspace - Eject all the pilots.
+    F1 - Debug info. Show how many sprites are active.
 """
 
 from time import time
@@ -33,22 +38,27 @@ class Ship(arcade.Sprite):
         self.right = -1  # just off left edge of screen
         self.center_y = randint(0, SCREEN_HEIGHT)
         self.angle = -90  # facing right
-        self.change_angle = 0
+        self.angle_delta = 0
+        self.scale_delta = 0
         self.change_x = size_factor*7  # Bigger/nearer the ship, faster it goes
 
     def update(self):
-        """ Move right. Delete when off right edge of window. """
+        # Move right. Apply any rotation/scaling.
         self.center_x += self.change_x
-        self.angle += self.change_angle
-        if self.left > SCREEN_WIDTH:
+        self.angle += self.angle_delta
+        self.scale += self.scale_delta
+
+        # Kill if off screen or too small to see.
+        if self.left > SCREEN_WIDTH or self.scale <= 0:
             self.kill()
 
     def tumble(self):
-        """ Set the ship to tumble/rotate """
-        self.change_angle = randint(-5, +5)
+        """ Set the ship to tumble and 'fall' """
+        self.angle_delta = randint(-5, +5)
+        self.scale_delta = -0.01
 
 
-class EjectingPilot(arcade.Sprite):
+class EjectedPilot(arcade.Sprite):
     """ A spinning creature that grows then shrinks. """
 
     image_list = [
@@ -63,10 +73,10 @@ class EjectingPilot(arcade.Sprite):
         super().__init__(filename=choice(self.image_list), scale=0.1)
         self.center_x = x
         self.center_y = y
-        self.scale = scale / 2
+        self.scale = scale / 5
         self.angle = randint(0, 359)
-        self.max_scale = scale*3
-        self.scale_delta = (self.max_scale - self.scale) / 40
+        self.max_scale = self.scale*10
+        self.scale_delta = (self.max_scale - self.scale) / 100
         self.change_angle = randint(1, 10)
 
     def update(self):
@@ -123,7 +133,8 @@ class MyGame(arcade.Window):
 
         elif key == arcade.key.F1:
             # Show number of active sprites
-            print(len(self.ship_list))
+            print(f"Ships: {len(self.ship_list)} "
+                  f"Pilots: {len(self.pilot_list)}")
 
         elif key == arcade.key.SPACE:
             # Eject a pilot from a random ship and set the ship spinning
@@ -136,15 +147,15 @@ class MyGame(arcade.Window):
                 self.eject_pilot_from_ship(ship)
 
     def on_mouse_press(self, x, y, button, key_modifiers):
-        """ Eject the pilot from the ship being clicked on. """
+        """ Eject the pilot from the ships being clicked on. """
         ships = arcade.get_sprites_at_point((x, y), self.ship_list)
         for ship in ships:
             self.eject_pilot_from_ship(ship)
 
     def eject_pilot_from_ship(self, ship):
+        """ Create a pilot at the ships location, and set ship tumbling. """
         ship.tumble()
-        new_pilot = EjectingPilot(ship.center_x, ship.center_y,
-                                  ship.scale)
+        new_pilot = EjectedPilot(ship.center_x, ship.center_y, ship.scale)
         self.pilot_list.append(new_pilot)
 
 

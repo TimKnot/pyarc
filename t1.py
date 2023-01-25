@@ -57,12 +57,11 @@ class Spinner(arcade.Sprite):
         ":resources:/images/enemies/saw.png",
         ":resources:/images/enemies/slimeBlock.png",
         ":resources:/images/enemies/wormPink.png",
-
     ]
 
     def __init__(self, x, y, scale_delta=0.1, max_scale=1, change_angle=0):
 
-        # Call the parent init
+        # Call the parent init (and pick a random image from the list)
         super().__init__(choice(self.image_list), 0.1)
 
         self.center_x = x
@@ -125,7 +124,7 @@ class MyGame(arcade.Window):
     def on_key_press(self, key, modifiers):
         if key == arcade.key.ESCAPE:
             # Quit
-            arcade.close_window()
+            arcade.exit()
 
 
 def main():

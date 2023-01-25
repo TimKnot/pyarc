@@ -15,7 +15,8 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Sprite2: Scaling and sorting"
 SHIP_FREQUENCY_SECONDS = 0.15
-VSYNC=False
+VSYNC = False
+
 
 class Ship(arcade.Sprite):
     """ Move a random ship across the screen left to right.
@@ -38,15 +39,16 @@ class Ship(arcade.Sprite):
         self.right = -1  # just off left edge of screen
         self.center_y = randint(0, SCREEN_HEIGHT)
         self.angle = -90  # facing right
-        self.angle_delta = 0
-        self.scale_delta = 0
-        self.x_delta = size_factor*7  # Bigger/nearer the ship, faster it goes
+        self.delta_angle = 0
+        self.delta_scale = 0
+        self.delta_x = size_factor*7  # Bigger/nearer the ship, faster it goes
+        self.tumbling = False
 
     def update(self):
         # Move right. Apply any rotation/scaling.
-        self.center_x += self.x_delta
-        self.angle += self.angle_delta
-        self.scale += self.scale_delta
+        self.center_x += self.delta_x
+        self.angle += self.delta_angle
+        self.scale += self.delta_scale
 
         # Kill if off screen or too small to see.
         if self.left > SCREEN_WIDTH or self.scale <= 0:
@@ -54,9 +56,9 @@ class Ship(arcade.Sprite):
 
     def tumble(self):
         """ Set the ship to tumble and 'fall' """
-        self.angle_delta = randint(-5, +5)
-        self.scale_delta = -0.01
-
+        self.delta_angle = randint(-5, +5)
+        self.delta_scale = -0.01
+        self.tumbling = True
 
 class EjectedPilot(arcade.Sprite):
     """ A spinning creature that grows then shrinks. """
@@ -76,17 +78,17 @@ class EjectedPilot(arcade.Sprite):
         self.scale = scale / 5
         self.angle = randint(0, 359)
         self.max_scale = self.scale*10
-        self.scale_delta = (self.max_scale - self.scale) / 100
-        self.angle_delta = randint(1, 10)
+        self.delta_scale = (self.max_scale - self.scale) / 100
+        self.delta_angle = randint(1, 10)
 
     def update(self):
         # Rotate the ship
-        self.angle += self.angle_delta
-        self.scale += self.scale_delta
+        self.angle += self.delta_angle
+        self.scale += self.delta_scale
 
         # Grow then shrink
         if self.scale > self.max_scale:
-            self.scale_delta *= -1
+            self.delta_scale *= -1
         elif self.scale <= 0:
             self.kill()
 
@@ -116,7 +118,6 @@ class MyGame(arcade.Window):
         all_sprites.draw()
 
     def on_update(self, delta_time):
-        global timer
         self.ship_list.update()
         self.pilot_list.update()
 
@@ -152,11 +153,13 @@ class MyGame(arcade.Window):
         for ship in ships:
             self.eject_pilot_from_ship(ship)
 
-    def eject_pilot_from_ship(self, ship):
-        """ Create a pilot at the ships location, and set ship tumbling. """
-        ship.tumble()
-        new_pilot = EjectedPilot(ship.center_x, ship.center_y, ship.scale)
-        self.pilot_list.append(new_pilot)
+    def eject_pilot_from_ship(self, ship: Ship):
+        """ Create a pilot at the ships location, and set ship tumbling.
+            (Ignore ships that are already tumbling) """
+        if not ship.tumbling:
+            ship.tumble()
+            new_pilot = EjectedPilot(ship.center_x, ship.center_y, ship.scale)
+            self.pilot_list.append(new_pilot)
 
 
 def main():

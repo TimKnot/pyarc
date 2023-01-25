@@ -15,6 +15,7 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Sprite2: Scaling and sorting"
 VSYNC = False
+TRIPPY_MODE = False
 SHIP_FREQUENCY_SECONDS = 0.15
 METEOR_FREQUENCY_SECONDS = 0.3
 
@@ -153,7 +154,8 @@ class MyGame(arcade.Window):
             This forces bigger/nearer ones to be drawn over far away ones.
             There's probably a better way to do this! """
 
-        self.clear()
+        if not TRIPPY_MODE:
+            self.clear()
         self.meteor_list.draw()
 
         all_sprites = arcade.SpriteList()
@@ -202,6 +204,11 @@ class MyGame(arcade.Window):
             # Eject all the pilots!
             for ship in self.ship_list:
                 self.eject_pilot_from_ship(ship)
+
+        elif key == arcade.key.T:
+            # Toggle Trippy Mode
+            global TRIPPY_MODE
+            TRIPPY_MODE = not TRIPPY_MODE
 
     def on_mouse_press(self, x, y, button, key_modifiers):
         """ Eject the pilot from the ships being clicked on. """

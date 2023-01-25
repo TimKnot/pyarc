@@ -15,7 +15,7 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Sprite2: Scaling and sorting"
 SHIP_FREQUENCY_SECONDS = 0.15
-
+VSYNC=False
 
 class Ship(arcade.Sprite):
     """ Move a random ship across the screen left to right.
@@ -40,11 +40,11 @@ class Ship(arcade.Sprite):
         self.angle = -90  # facing right
         self.angle_delta = 0
         self.scale_delta = 0
-        self.change_x = size_factor*7  # Bigger/nearer the ship, faster it goes
+        self.x_delta = size_factor*7  # Bigger/nearer the ship, faster it goes
 
     def update(self):
         # Move right. Apply any rotation/scaling.
-        self.center_x += self.change_x
+        self.center_x += self.x_delta
         self.angle += self.angle_delta
         self.scale += self.scale_delta
 
@@ -77,11 +77,11 @@ class EjectedPilot(arcade.Sprite):
         self.angle = randint(0, 359)
         self.max_scale = self.scale*10
         self.scale_delta = (self.max_scale - self.scale) / 100
-        self.change_angle = randint(1, 10)
+        self.angle_delta = randint(1, 10)
 
     def update(self):
         # Rotate the ship
-        self.angle += self.change_angle
+        self.angle += self.angle_delta
         self.scale += self.scale_delta
 
         # Grow then shrink
@@ -92,8 +92,8 @@ class EjectedPilot(arcade.Sprite):
 
 
 class MyGame(arcade.Window):
-    def __init__(self, width, height, title):
-        super().__init__(width, height, title)
+    def __init__(self, width, height, title, vsync=False):
+        super().__init__(width, height, title, vsync)
         arcade.set_background_color(arcade.color.BLACK)
 
         self.ship_list = None
@@ -160,7 +160,7 @@ class MyGame(arcade.Window):
 
 
 def main():
-    window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, VSYNC)
     window.setup()
     arcade.run()
 

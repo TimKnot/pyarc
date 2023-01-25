@@ -32,17 +32,15 @@ class Meteor(arcade.Sprite):
     ]
 
     def __init__(self):
-        size_factor = random()/2+0.1  # Defines the scale and speed
-
         # Call the parent init (and pick a random image from the list)
-        super().__init__(filename=choice(self.image_list), scale=size_factor)
+        super().__init__(filename=choice(self.image_list), scale=random()/2+0.1)
 
         self.left = SCREEN_WIDTH  # just off right edge of screen
         self.center_y = randint(0, SCREEN_HEIGHT)
         self.angle = 0
         self.delta_angle = randint(-5, 5)
         self.delta_scale = 0
-        self.delta_x = -size_factor*20  # nearer/bigger = faster
+        self.delta_x = -self.scale*20  # nearer/bigger = faster
 
     def update(self):
         # Update position. Apply any rotation.
@@ -68,17 +66,15 @@ class Ship(arcade.Sprite):
     ]
 
     def __init__(self):
-        size_factor = random()+0.1  # Defines the scale and speed
-
         # Call the parent init (and pick a random image from the list)
-        super().__init__(filename=choice(self.image_list), scale=size_factor)
+        super().__init__(filename=choice(self.image_list), scale=random()+0.1)
 
         self.right = -1  # just off left edge of screen
         self.center_y = randint(0, SCREEN_HEIGHT)
         self.angle = -90  # facing right
         self.delta_angle = 0
         self.delta_scale = 0
-        self.delta_x = size_factor*7  # Bigger/nearer the ship, faster it goes
+        self.delta_x = self.scale*7  # Bigger/nearer the ship, faster it goes
         self.tumbling = False
 
     def update(self):
@@ -112,13 +108,13 @@ class EjectedPilot(arcade.Sprite):
     ]
 
     def __init__(self, x, y, scale, delta_x=0):
-        super().__init__(filename=choice(self.image_list), scale=scale/5)
+        super().__init__(filename=choice(self.image_list), scale=scale)
         self.center_x = x
         self.center_y = y
         self.delta_x = delta_x
         self.angle = randint(0, 359)
-        self.max_scale = self.scale*10
-        self.delta_scale = (self.max_scale - self.scale) / 100
+        self.max_scale = self.scale*2
+        self.delta_scale = (self.max_scale - self.scale) / 50
         self.delta_angle = randint(-5, 5)
 
     def update(self):
@@ -143,13 +139,13 @@ class MyGame(arcade.Window):
         self.meteor_list = None
         self.ship_list = None
         self.pilot_list = None
-        self.previous_meteor_time = time()
-        self.previous_ship_time = time()
 
     def setup(self):
         self.meteor_list = arcade.SpriteList()
         self.ship_list = arcade.SpriteList()
         self.pilot_list = arcade.SpriteList()
+        self.previous_meteor_time = time()
+        self.previous_ship_time = time()
 
     def on_draw(self):
         """ Draw meteor field first.

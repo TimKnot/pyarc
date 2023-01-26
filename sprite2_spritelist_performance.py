@@ -20,7 +20,7 @@ Usage:
     Space - Eject a random pilot.
     Backspace - Eject all the pilots.
     F1 - Debug info. Show how many sprites are active.
-    F2 - Toggle Single/Seperate spritelists.
+    F2 - Toggle Single/Separate spritelists.
     ESC - Quit
 """
 
@@ -130,16 +130,17 @@ class EjectedPilot(arcade.Sprite):
     """ A spinning creature that grows then shrinks. """
 
     image_list = [
-        ":resources:/images/enemies/slimeBlock.png",
-        ":resources:/images/enemies/wormPink.png",
-        ":resources:/images/animated_characters/female_adventurer/femaleAdventurer_jump.png",
-        ":resources:/images/animated_characters/male_adventurer/maleAdventurer_fall.png",
-        ":resources:/images/animated_characters/robot/robot_fall.png",
-        ":resources:/images/animated_characters/zombie/zombie_idle.png",
+        "enemies/slimeBlock.png",
+        "enemies/wormPink.png",
+        "animated_characters/female_adventurer/femaleAdventurer_jump.png",
+        "animated_characters/male_adventurer/maleAdventurer_fall.png",
+        "animated_characters/robot/robot_fall.png",
+        "animated_characters/zombie/zombie_idle.png",
     ]
 
     def __init__(self, x, y, scale, delta_x=0):
-        super().__init__(filename=choice(self.image_list), scale=scale)
+        file = f":resources:/images/{choice(EjectedPilot.image_list)}"
+        super().__init__(filename=file, scale=scale)
         self.center_x = x
         self.center_y = y
         self.delta_x = delta_x

@@ -5,10 +5,11 @@ Usage:
     Space - Eject a random pilot.
     Backspace - Eject all the pilots.
     F1 - Debug info. Show how many sprites are active.
+    ESC - Quit
 """
 
 from time import time
-from random import random, randint, choice
+from random import uniform, randint, choice
 import arcade
 
 SCREEN_WIDTH = 800
@@ -34,13 +35,13 @@ class Meteor(arcade.Sprite):
 
     def __init__(self):
         # Call the parent init (and pick a random image from the list)
-        super().__init__(filename=choice(self.image_list), scale=random()/2+0.1)
+        super().__init__(filename=choice(self.image_list),
+                         scale=uniform(0.1, 0.5))
 
         self.left = SCREEN_WIDTH  # just off right edge of screen
         self.center_y = randint(0, SCREEN_HEIGHT)
         self.angle = 0
         self.delta_angle = randint(-5, 5)
-        self.delta_scale = 0
         self.delta_x = -self.scale*20  # nearer/bigger = faster
 
     def update(self):
@@ -68,7 +69,8 @@ class Ship(arcade.Sprite):
 
     def __init__(self):
         # Call the parent init (and pick a random image from the list)
-        super().__init__(filename=choice(self.image_list), scale=random()+0.1)
+        super().__init__(filename=choice(self.image_list),
+                         scale=uniform(0.1, 1.0))
 
         self.right = -1  # just off left edge of screen
         self.center_y = randint(0, SCREEN_HEIGHT)
